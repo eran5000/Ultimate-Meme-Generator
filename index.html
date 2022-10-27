@@ -16,7 +16,7 @@
             </div>
             <nav class="main-nav">
                 <ul class="flex full clean-list">
-                    <li><a class="header-gallery" onclick="onInitGallery()">Gallery</a></li>
+                    <li><a class="toggle" onclick="toggleEditor()"></a></li>
                     <li><a class="header-gallery" onclick="onInitAbout()">About</a></li>
                 </ul>
             </nav>
@@ -31,10 +31,16 @@
             ></canvas>
             <div class="meme-editor flex column">
                 <label for="txt-change">Change Text</label>
-                <input class="txt-change" type="text" oninput="onChangeText()" placeholder="change text">
+                <input class="txt-change" type="text" oninput="onChangeText()" placeholder="">
                 <label for="color-change">Change Text</label>
                 <input class="color-change" type="color" oninput="onChangeColor()">
                 <button type="button" class="switch-line" onclick="onSwitchLines()">&uarr;&darr;</button>
+                <button type="button" class="font-plus" onclick="onFontSize('plus')">A+</button>
+                <button type="button" class="font-minus" onclick="onFontSize('minus')">A-</button>
+                <button type="button" class="text-right" onclick="onAlignText('right')">right</button>
+                <button type="button" class="text-center" onclick="onAlignText('center')">center</button>
+                <button type="button" class="text-left" onclick="onAlignText('left')">left</button>
+                <button type="button" class="add-line" onclick="onAddLine()">+</button>
             </div>
         </section>
     

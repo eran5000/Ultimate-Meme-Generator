@@ -20,3 +20,18 @@ function onSwitchLines(){
     switchLines()
     renderMeme()
 }
+
+function onFontSize(size){
+    fontSize(size)
+    renderMeme()
+}
+
+function onAlignText(align){
+    alignText(align)
+    renderMeme()
+}
+
+function onAddLine(){
+    addLine()
+    renderMeme()
+}

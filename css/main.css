@@ -115,6 +115,14 @@ header a:hover{
     color: var(--clr-4);
 }
 
+.toggle::before{
+    content: 'Editor'
+}
+
+body.editor-open .toggle::before{
+    content: 'Gallery';
+}
+
 .btn-menu{
     color: var(--clr3);
     background-color: inherit;
@@ -128,6 +136,10 @@ header a:hover{
 .btn-menu:hover{
     background-color:var(--clr3);
     color: var(--clr-4);
+}
+
+.txt-change{
+    color: var(--clr3);
 }
 
 /* COMPONENTS */
@@ -170,8 +182,8 @@ header a:hover{
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     grid-auto-rows: 150px;
     gap: 10px;
+    row-gap: 30px;
     margin: 10px;
-    display: '';
 }
 
 .imgs{
@@ -191,7 +203,7 @@ body.editor-open .editor-container{
 .editor-container{
     flex-direction: row;
     margin: 10px;
-    display: none;
+    display:none;
 }
 
 @media (max-width:900px) {

@@ -1,31 +1,38 @@
 'use strict'
+
+const STORAGE_KEY = 'memeDB'
+
+let gCurrLine = 0
+let gPositions
+let gMemes =[]
 let gElCanvas = document.getElementById('img-to-meme')
 let gCtx = gElCanvas.getContext('2d'),
     columns = 5,
     rows = 5
-let gImgs =[{id:1, url:'./img/meme-imgs(square)/1.jpg', keywords:['politics','Trump']},{id:2, url:'./img/meme-imgs(square)/2.jpg', keywords:['cute','dog']}]
 let gMeme ={ 
     selectedImgId: 1, 
     selectedLineIdx: 0, 
     lines: 
     [ { txt: 'I sometimes eat Falafel', 
         size: 20, align: 'right', 
-        color: '#FFFFFF', line: ''},
+        color: '#FFFFFF', line: 0, position:''},
         { txt: 'I always eat Nuggets', 
         size: 30, align: 'center', 
-        color: '#FFFFFF', line: ''} ] 
+        color: '#FFFFFF', line: 7, position:''} ] 
     }
 
-document.querySelector('.color-change').value = gMeme.lines[0].color
+let gCurrAlign = '.text-' + gMeme.lines[gCurrLine].align
+
+document.querySelector('.color-change').value = gMeme.lines[gCurrLine].color
+document.querySelector('.txt-change').placeholder = gMeme.lines[gCurrLine].txt
+document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr-4)"
 
 function getMeme(){
     return gMeme
 }
-function getImgs(){
-    return gImgs
-}
 
 function drawImg(){
+    gPositions = []
     let txtLine = 0
     let objWithIdIndex = gImgs.findIndex(ele => ele.id === gMeme.selectedImgId)
     const img = new Image()
@@ -37,37 +44,79 @@ function drawImg(){
             gCtx.fillStyle = line.color
             gCtx.textAlign = line.align;
             let xPosition = gCtx.measureText(line.txt)
-            if(line.line !== '') txtLine = line.line
+            if(line.line < txtLine) line.line = txtLine
             switch (line.align) {
                 case 'right':
-                    gCtx.fillText(line.txt,xPosition.width,(line.size + (txtLine/8)*(gElCanvas.height - line.size)))
+                    line.position = {x:xPosition.width,y:40+(line.line/8)*(gElCanvas.height)}
                     break;
             
                 case 'center': 
-                    gCtx.fillText(line.txt,gElCanvas.width/2,(line.size + (txtLine/8)*(gElCanvas.height - line.size)))
+                    line.position = {x:gElCanvas.width/2,y:40+(line.line/8)*(gElCanvas.height)}
                     break;
 
                 case 'left':
-                    gCtx.fillText(line.txt,gElCanvas.width - xPosition.width,(line.size + (txtLine/8)*(gElCanvas.height - line.size)))
+                    line.position = {x:gElCanvas.width - xPosition.width,y:40+(line.line/8)*(gElCanvas.height)}
+                    break
             }
-            if(line.line === ''){ 
-                line.line = txtLine
-                txtLine++
-            }
+            gPositions.push(line.position)
+            gCtx.fillText(line.txt,line.position.x,line.position.y) 
+            txtLine++
         })
+        gCtx.strokeStyle = 'white'
+        gCtx.strokeRect(0, gPositions[gCurrLine].y, gElCanvas.width, -40)
     }
+    return gPositions
 }
 
 function setLineTxt(){
-    gMeme.lines[0].txt = document.querySelector('.txt-change').value
+    gMeme.lines[gCurrLine].txt = document.querySelector('.txt-change').value
 }
 
 function setTxtColor(){
-    gMeme.lines[0].color = document.querySelector('.color-change').value
+    gMeme.lines[gCurrLine].color = document.querySelector('.color-change').value
 }
 
 function switchLines(){
-    let line = gMeme.lines[0].line
-    gMeme.lines[0].line = gMeme.lines[gMeme.lines.length - 1].line
-    gMeme.lines[gMeme.lines.length - 1].line = line
+    gCurrLine++
+    if(gCurrLine >= gMeme.lines.length) gCurrLine = 0
+    changeLineUsed()
+    console.log(gPositions);
 }
+
+function _savMemesToStorage(key = STORAGE_KEY, val = gMemes){
+    saveToStorage(key, val)
+}
+
+function fontSize(size){
+    size === 'plus'? gMeme.lines[gCurrLine].size +=1 : gMeme.lines[gCurrLine].size -=1
+}
+
+function alignText(align){
+    gMeme.lines[gCurrLine].align = align
+    changeLineUsed()
+}
+
+function addLine(){
+    gMeme.lines.unshift(
+        { 
+        txt: 'New line', 
+        size: 20, align: 'center', 
+        color: '#FFFFFF', line: 0, position:''
+        }
+    )
+    console.log(gMeme.lines);
+    gCurrLine = 0
+    changeLineUsed()
+}
+
+function changeLineUsed(){
+    document.querySelector('.color-change').value = gMeme.lines[gCurrLine].color
+    document.querySelector('.txt-change').placeholder = gMeme.lines[gCurrLine].txt
+    document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr3)"
+    gCurrAlign = '.text-' + gMeme.lines[gCurrLine].align
+    document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr-4)"
+
+}
+
+
+

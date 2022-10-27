@@ -4,6 +4,8 @@
     --clr2: #b4ad9e;
     --clr1: #626262;
     --clr-2: #000;
+    --clr-3: #323234;
+    --clr-4: #00FFFF;
 
     /* BP */
     --l: 1300px;
@@ -42,16 +44,21 @@ h2 {
 body {
     margin: 0;
     font-size: 0.875rem;
-    background-color: rgb(52, 50, 50);
+    background-color: var(--clr-3);
     color: aqua;
 }
 
 input{
-    background-color: black;
+    background-color: var(--clr-2);
 }
 
 button{
     cursor: pointer;
+}
+
+img{
+    width:100%;
+    height: 100%;
 }
 
 /* HELPERS */
@@ -66,6 +73,10 @@ button{
     justify-content: space-between;
 }
 
+.flex.space-around{
+    justify-content: space-around;
+}
+
 .flex.align-center {
     align-items: center;
 }
@@ -74,25 +85,59 @@ button{
     flex-direction: column;
 }
 
+/* list helpers */
+
+.clean-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+
 /* grid helpers */
 
 .grid{
     display: grid;
 }
 
+/* LAYOUT */
+
 header{
-   border-radius: 25px;
-   background-color: aqua;
-   padding: 15px;
+   background-color: var(--clr-4);
    font-size: large;
-   
 }
 
-img{
-    width:100%;
-    height: 100%;
+header a{
+    color: var(--clr3);
 }
 
+header a:hover{
+    background-color: var(--clr3);
+    color: var(--clr-4);
+}
+
+.btn-menu{
+    color: var(--clr3);
+    background-color: inherit;
+    border-color: var(--clr-4)/var(--clr-4);
+}
+
+.btn-menu::before{
+    content: '☰';
+}
+
+.btn-menu:hover{
+    background-color:var(--clr3);
+    color: var(--clr-4);
+}
+
+/* COMPONENTS */
+/* header */
+
+header{
+    border-radius: 25px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
 
 .logo img{
     width: 100px;
@@ -105,32 +150,108 @@ img{
 header a{
     margin: 10px;
     padding: 10px;
-    color: white;
 }
 
 header a:hover{
     cursor: pointer;
     border-radius: 25px;
-    background-color: white;
-    color: aqua;
 }
+
+.btn-menu{
+    margin-right: 5%;
+    height: 4rem;
+    width: 4rem;
+    font-size:x-large;
+}
+
+/* gallery */
 
 .gallery-container{
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     grid-auto-rows: 150px;
-    gap: 5px;
+    gap: 10px;
+    margin: 10px;
+    display: '';
 }
 
 .imgs{
     aspect-ratio: 1/1;
 }
 
-.editor-container{
-    flex-direction: row;
+body.editor-open .gallery-container{
+    display: none;
 }
 
-.meme-editor{
-    flex-direction: column;
+/* meme-editor */
+
+body.editor-open .editor-container{
+    display:flex;
+}
+
+.editor-container{
+    flex-direction: row;
+    margin: 10px;
+    display: none;
+}
+
+@media (max-width:900px) {
+    .main-nav {
+        position: fixed;
+        background-color: var(--clr-4);
+        height: 100vh;
+        border-inline-start: 1px solid #ccc;
+        inset: 95px 0 0 auto;
+        min-width: 200px;
+        transform: translateX(100%);
+        overflow-y: scroll;
+
+    }
+    
+    body.menu-open .main-nav {
+        transform: translateX(10%);
+        border-radius: 25px ;
+        /* box-shadow: -9px 0px 14px rgb(0 0 0 / 100%); */
+        transition: transform .6s, box-shadow .6s;
+    }
+
+    .main-nav ul {
+        flex-direction: column;
+    }
+
+    .main-nav ul li {
+        border-bottom: 1px solid #ccc;
+    }
+
+    .main-nav ul a {
+        display: block;
+        padding: 14px;
+    }
+
+    body.menu-open .btn-menu::before{
+        content: 'X';
+    }
+
+    .btn-menu{
+        display: block;
+    }
+
+    body.menu-open{
+        overflow-y: hidden;
+    }
+
+    .editor-container>*{
+        margin-left: auto;
+        margin-right: auto;
+        width: 70%;
+    }
+
+    .editor-container{
+        flex-direction: column;
+    }
+
+    .meme-editor{
+        margin-right: 20%;
+    }
 }
 
 @media (max-width: 420px) {
@@ -143,8 +264,37 @@ header a:hover{
         aspect-ratio: 1.5/1;
     }
 
-    .editor-container{
-        flex-direction: column;
+}
+
+@media (min-width:900px){
+
+    .main-header .main-nav a {
+        min-width: 8rem;
+    }
+
+    .btn-menu{
+        display: none;
+    }
+
+    .main-modal{
+        height: 60%;
+        width: 80%;
+        inset: 20% 10% 20% 10%;
+    }
+
+    .main-nav{
+        margin-right: 10%;
+    }
+
+    .meme-editor{
+        margin-right: 20%;
+    }
+
+}
+
+@media (min-width:1150px){
+    .meme-editor{
+        margin-right: 40%;
     }
 }
 

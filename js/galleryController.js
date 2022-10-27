@@ -17,4 +17,5 @@ function renderGallery(){
 function onImgSelect(id){
     setImg(id)
     renderMeme()
+    toggleEditor()
 }

@@ -20,15 +20,16 @@
                     <li><a class="header-gallery" onclick="onInitAbout()">About</a></li>
                 </ul>
             </nav>
+            <button type="button" class="btn-menu" onclick="toggleMenu()"></button>
         </header>
         <section class="gallery-container grid"></section>
-        <section class="editor-container flex">
+        <section class="editor-container flex space-around">
             <canvas class="meme-canvas"
                 id="img-to-meme"
                 height="500"
                 width="500"
             ></canvas>
-            <div class="meme-editor flex">
+            <div class="meme-editor flex column">
                 <label for="txt-change">Change Text</label>
                 <input class="txt-change" type="text" oninput="onChangeText()" placeholder="change text">
                 <label for="color-change">Change Text</label>

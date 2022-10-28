@@ -102,7 +102,7 @@ function setLineTxt(){
 }
 
 function setTxtColor(){
-    gMeme.lines[gMeme.selectedLineIdx].color = document.querySelector('.color-change').value
+    gMeme.lines[gMeme.selectedLineIdx].color = document.querySelector('.colors').value
 }
 
 function switchLines(){

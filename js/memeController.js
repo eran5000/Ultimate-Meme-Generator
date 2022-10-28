@@ -51,3 +51,8 @@ function onMoveText(diraction){
     moveText(diraction)
     renderMeme()
 }
+
+function onAddEmoji(emoji){
+    addEmoji(emoji)
+    renderMeme()
+}

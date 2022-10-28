@@ -3,6 +3,7 @@
 const STORAGE_KEY = 'memeDB'
 
 let gCurrLine = 0
+let isBorder = false
 let gFonts = []
 let gPositions = []
 let gMemes =[]
@@ -24,9 +25,9 @@ let gMeme ={
 
 let gCurrAlign = '.text-' + gMeme.lines[gMeme.selectedLineIdx].align
 
-document.querySelector('.color-change').value = gMeme.lines[gMeme.selectedLineIdx].color
 document.querySelector('.txt-change').placeholder = gMeme.lines[gMeme.selectedLineIdx].txt
 document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr-4)"
+// resizeCanvas()
 
 function getMeme(){
     return gMeme
@@ -67,28 +68,30 @@ function drawImg(){
             let xPosition = gCtx.measureText(line.txt) 
             switch (line.align) {
                 case 'right':
-                    position = {x:xPosition.width,y:gPositions[gMeme.selectedLineIdx]}
+                    position = {x:xPosition.width,y:gPositions[gMeme.selectedLineIdx],start:0,end:xPosition.width}
                     break;
             
                 case 'center': 
-                    position = {x:gElCanvas.width/2,y:gPositions[gMeme.selectedLineIdx]}
+                    position = {x:gElCanvas.width/2,y:gPositions[gMeme.selectedLineIdx],start:gElCanvas.width/2-xPosition.width/2,end:xPosition.width}
                     break;
 
                 case 'left':
-                    position = {x:gElCanvas.width - xPosition.width,y:gPositions[gMeme.selectedLineIdx]}
+                    position = {x:gElCanvas.width - xPosition.width,y:gPositions[gMeme.selectedLineIdx],start:gElCanvas.width - xPosition.width,end:xPosition.width}
                     break
             }
             positions.push(position)
             gCtx.strokeStyle= 'black'
+            gCtx.lineWidth = 1;
             gCtx.fillText(line.txt,position.x,position.y)
             gCtx.strokeText(line.txt,position.x,position.y)
 
             gMeme.selectedLineIdx++
         })
-        if(gMeme.lines.length > 0){
+        if(gMeme.lines.length > 0 && isBorder == false){
             gMeme.selectedLineIdx = gCurrLine
+            gCtx.lineWidth = 5;
             gCtx.strokeStyle = 'white'
-            gCtx.strokeRect(0, positions[gMeme.selectedLineIdx].y, gElCanvas.width, -40)
+            gCtx.strokeRect(positions[gMeme.selectedLineIdx].start, (positions[gMeme.selectedLineIdx].y + 10), positions[gMeme.selectedLineIdx].end, (-gMeme.lines[gMeme.selectedLineIdx].size - 10))
         }
         changeLineUsed()
     }
@@ -134,14 +137,12 @@ function addLine(){
 
 function changeLineUsed(){
     if(gMeme.lines.length > 0){
-        document.querySelector('.color-change').value = gMeme.lines[gMeme.selectedLineIdx].color
         document.querySelector('.txt-change').placeholder = gMeme.lines[gMeme.selectedLineIdx].txt
         document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr3)"
         gCurrAlign = '.text-' + gMeme.lines[gMeme.selectedLineIdx].align
-        document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr-4)"
+        document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr2)"
         document.querySelector('.fonts').value = gFonts[gMeme.selectedLineIdx]
     }else{
-        document.querySelector('.color-change').value = "#FFFFFF"
         document.querySelector('.txt-change').placeholder = 'No line found' 
         document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr3)"
         document.querySelector('.fonts').value = 'Impact'
@@ -164,6 +165,26 @@ function changeFont(font){
 function moveText(diraction){
     gPositions[gMeme.selectedLineIdx] += diraction
 }
+
+function addEmoji(emoji){
+    gMeme.lines.push(
+        { 
+        txt: emoji, 
+        size: 30, align: 'center', 
+        color: '#FFFFFF'
+        }
+    )
+    gCurrLine = gMeme.lines.length -1
+    gMeme.selectedLineIdx = gCurrLine
+}
+
+function resizeCanvas() {
+    const elContainer = document.querySelector('.meme-canvas')
+    // Note: changing the canvas dimension this way clears the canvas
+    gElCanvas.width = elContainer.offsetWidth -10
+    // Unless needed, better keep height fixed.
+    // gElCanvas.height = elContainer.offsetHeight
+  }
 
 
 

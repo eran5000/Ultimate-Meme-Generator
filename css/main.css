@@ -1,7 +1,7 @@
 :root {
     /* pallet */
     --clr3: #f0f0f0;
-    --clr2: #b4ad9e;
+    --clr2: #93d7c8;
     --clr1: #626262;
     --clr-2: #000;
     --clr-3: #323234;
@@ -54,6 +54,7 @@ input{
 
 button{
     cursor: pointer;
+    background-color: var(--clr3);
 }
 
 img{
@@ -214,12 +215,74 @@ body.editor-open .editor-container{
 }
 
 .edit{
-    width: fit-content;
-    height:fit-content;
+    width: 55px;
+    height:55px;
     border-radius: 5px;
+    border-color: var(--clr3);
+    font-size: x-large;
+    font-weight:bolder;
 }
 
-@media (max-width:900px) {
+.emoji{
+    width: 450px;
+    height: 90px;
+    border: 1px white solid;
+    border-radius: 50px;
+    background-color: var(--clr3);
+    align-items: center;
+    justify-content: space-between;
+}
+
+.txt-change{
+    width: 450px;
+    height: 55px;
+    border-radius: 50px;
+    text-align: center;
+}
+
+.add-emoji{
+    cursor: pointer;
+    font-size: 40px;
+    width: 65px;
+    height: 65px;
+    text-align: center;
+}
+
+.fonts{
+    width: 240px;
+    height: 55px;
+    border-radius: 50px;
+}
+
+.color-change{
+    position: relative;
+    background-color:white;
+    font-size:xx-large;
+    text-align: center;
+}
+
+.colors{
+    opacity:0;
+    position:absolute;
+    top:0;left:0;
+    width:100%;
+    height:100%;
+    cursor: pointer; 
+}
+
+body.menu-open .color-change{
+    position:fixed;
+}
+
+.paragraph-edit{
+    border: 1px solid var(--clr-4);
+    background-color: var(--clr-4);
+    border-radius: 25px;
+    justify-content: center;
+    align-items: center;
+}
+
+@media (max-width:1000px) {
     .main-nav {
         position: fixed;
         background-color: var(--clr-4);
@@ -267,7 +330,7 @@ body.editor-open .editor-container{
     .editor-container>*{
         margin-left: auto;
         margin-right: auto;
-        width: 70%;
+        width: 80%;
     }
 
     .editor-container{
@@ -275,7 +338,23 @@ body.editor-open .editor-container{
     }
 
     .meme-editor{
-        margin-right: 20%;
+        align-items: center;
+    }
+
+    .emoji ,.txt-change{
+        width: 300px;
+        height: 50px;
+    }
+
+    .add-emoji{
+        font-size: 25px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .paragraph-edit{
+        width: 300px;
+        height: 150px;
     }
 }
 
@@ -289,9 +368,39 @@ body.editor-open .editor-container{
         aspect-ratio: 1.5/1;
     }
 
+    .emoji , .txt-change{
+        width: 250px;
+        height: 50px;
+    }
+
+    .add-emoji{
+        font-size: 15px;
+        width: 25px;
+        height: 25px;
+    }
+
+    .edit{
+        width: 50px;
+        height:50px;
+    }
+
+    .fonts{
+        width: 200px;
+        height: 50px;
+    }
+
+    .editor-container{
+        height: 90vh;
+    }
+
+    .paragraph-edit{
+        width: 270px;
+        height: 130px;
+    }
+
 }
 
-@media (min-width:900px){
+@media (min-width:1000px){
 
     .main-header .main-nav a {
         min-width: 8rem;
@@ -311,16 +420,19 @@ body.editor-open .editor-container{
         margin-right: 10%;
     }
 
-    .meme-editor{
-        margin-right: 20%;
+    .editor-container{
+        margin-top: 5%;
     }
 
-}
-
-@media (min-width:1150px){
-    .meme-editor{
-        margin-right: 40%;
+    .editor{
+        width: 500px;
     }
+
+    .paragraph-edit{
+        width: 550px;
+        height: 150px;
+    }
+
 }
 
 

@@ -106,6 +106,7 @@ function setTxtColor(){
 }
 
 function switchLines(){
+    document.querySelector('.txt-change').value = ''
     gCurrLine++
     if(gCurrLine >= gMeme.lines.length) gCurrLine = 0
     gMeme.selectedLineIdx =gCurrLine
@@ -143,6 +144,7 @@ function changeLineUsed(){
         document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr2)"
         document.querySelector('.fonts').value = gFonts[gMeme.selectedLineIdx]
     }else{
+        document.querySelector('.txt-change').value = ''
         document.querySelector('.txt-change').placeholder = 'No line found' 
         document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr3)"
         document.querySelector('.fonts').value = 'Impact'

@@ -22,7 +22,16 @@
             </nav>
             <button type="button" class="btn-menu" onclick="toggleMenu()"></button>
         </header>
-        <section class="gallery-container grid"></section>
+        <section class="gallery-search">
+            <div class="flex switch">
+                <div class="search">
+                    <input class="search-bar" type="search" oninput="onSetFilterByTxt(this.value)" placeholder="search">&#x1F50D;
+                </div>
+                <div class="search-words flex row space-between"></div>
+                <button class="btn-search" type="button" onclick="onToggleSearch()"></button>
+            </div>
+            <div class="gallery-container grid"></div>
+        </section>
         <section class="editor-container flex space-around">
             <canvas class="meme-canvas"
                 id="img-to-meme"
@@ -32,7 +41,7 @@
             <div class="meme-editor flex column align-center space-around">
                 <input class="txt-change" type="text" oninput="onChangeText()">
                 <div class="flex row space-between editor">
-                    <button type="button" class="edit switch-line" style="background-color:#00FFFF;color: rgb(255, 255, 255);" onclick="onSwitchLines()">&uarr;&darr;</button>
+                    <button type="button" class="edit switch-line" style="background-color:#00c7c7;color: rgb(255, 255, 255);" onclick="onSwitchLines()">&uarr;&darr;</button>
                     <button type="button" class="edit add-line" style="background-color:rgb(115, 185, 11);color: rgb(255, 255, 255);" onclick="onAddLine()">+</button>
                     <button type="button" class="edit delete-line" style="background-color:rgb(229, 61, 32);color: rgb(255, 255, 255);" onclick="onDeleteLine()">&#128465;</button>
                     <button type="button" class="edit text-up" onclick="onMoveText(-40)">&uarr;</button>

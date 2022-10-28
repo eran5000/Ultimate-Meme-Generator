@@ -39,6 +39,39 @@ let gImgs =[
     keywords:['posture','funny']},
 ]
 
+let keywords = [
+    'politics',
+    'trump',
+    'man',
+    'posture',
+    'funny',
+    'sunglasses',
+    'baby',
+    'cute',
+    'cat',
+    'dog',
+    'kissing',
+    'suprise',
+]
+
+let sizes = [
+    1.0,
+    1.3,
+    1.8,
+    1.8,
+    1.5,
+    1.3,
+    1.4,
+    1.4,
+    1.3,
+    1.2,
+    1.0,
+    1.0,
+]
+
+var gFilterBy =''
+
+renderSearchWorcds()
 
 function setImg(id){
     let meme = getMeme()
@@ -46,5 +79,27 @@ function setImg(id){
 }
 
 function getImgs(){
-    return gImgs
+    var imgs = gImgs
+
+    imgs = imgs.filter(img => {
+        return (img.keywords.toString().toLowerCase().includes(gFilterBy.toLowerCase()))
+    })
+    return imgs
+}
+
+function setFilterByTxt(txt){
+    gFilterBy = txt
+    if(keywords.indexOf(txt.toLowerCase()) != -1){
+        sizes[keywords.indexOf(txt)] += 0.1
+        console.log(sizes[keywords.indexOf(txt)]);
+    }
+    renderSearchWorcds()
+}
+
+function renderSearchWorcds(){
+    let strHtml = ''  
+    for(var i = 0; i<sizes.length;i++){
+        strHtml += `<div class="word ${keywords[i]}" style="font-size:${sizes[i]*10}px;">${keywords[i]}-</div>`
+    }
+    document.querySelector('.search-words').innerHTML=strHtml
 }

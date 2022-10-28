@@ -19,3 +19,13 @@ function onImgSelect(id){
     renderMeme()
     toggleEditor()
 }
+
+function onSetFilterByTxt(txt) {
+    console.log('Filtering by txt', txt)
+    setFilterByTxt(txt)
+    renderGallery()
+}
+
+function onToggleSearch(){
+    document.querySelector('.gallery-search').classList.toggle('open')
+}

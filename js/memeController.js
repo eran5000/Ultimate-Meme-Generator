@@ -40,3 +40,14 @@ function onDeleteLine(){
     deleteLine()
     renderMeme()
 }
+
+function onChangeFont(){
+    let elFont = document.querySelector('.fonts').value
+    changeFont(elFont)
+    renderMeme()
+}
+
+function onMoveText(diraction){
+    moveText(diraction)
+    renderMeme()
+}

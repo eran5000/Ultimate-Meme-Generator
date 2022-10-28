@@ -37,11 +37,18 @@
                 <button type="button" class="edit switch-line" onclick="onSwitchLines()">&uarr;&darr;</button>
                 <button type="button" class="edit font-plus" onclick="onFontSize('plus')">A+</button>
                 <button type="button" class="edit font-minus" onclick="onFontSize('minus')">A-</button>
+                <button type="button" class="edit text-up" onclick="onMoveText(-40)">&uarr;</button>
+                <button type="button" class="edit text-down" onclick="onMoveText(40)">&darr;</button>
                 <button type="button" class="edit text-right" onclick="onAlignText('right')">&#182;<br>&#8594;</button>
                 <button type="button" class="edit text-center" onclick="onAlignText('center')">&#182;<br>&#8596;</button>
                 <button type="button" class="edit text-left" onclick="onAlignText('left')"> &#182;<br>&#8592;</button>
                 <button type="button" class="edit add-line" onclick="onAddLine()">+</button>
                 <button type="button" class="edit delete-line" onclick="onDeleteLine()">&#128465;</button>
+                <select class="edit fonts" oninput="onChangeFont()">
+                    <option value="Impact">Impact</option>
+                    <option value="Ariel">Ariel</option>
+                    <option value="Cursive">Cursive</option>
+                </select>
             </div>
         </section>
     

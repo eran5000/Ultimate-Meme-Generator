@@ -128,7 +128,6 @@ function addLine(){
         color: '#FFFFFF'
         }
     )
-    console.log(gMeme.lines);
     gCurrLine = gMeme.lines.length -1
     gMeme.selectedLineIdx = gCurrLine
 }

@@ -3,7 +3,6 @@
 const STORAGE_KEY = 'memeDB'
 
 let gCurrLine = 0
-let gPositions
 let gMemes =[]
 let gElCanvas = document.getElementById('img-to-meme')
 let gCtx = gElCanvas.getContext('2d'),
@@ -14,17 +13,17 @@ let gMeme ={
     selectedLineIdx: 0, 
     lines: 
     [ { txt: 'I sometimes eat Falafel', 
-        size: 20, align: 'right', 
-        color: '#FFFFFF', line: 0, position:''},
+        size: 40, align: 'right', 
+        color: '#FFFFFF'},
         { txt: 'I always eat Nuggets', 
         size: 30, align: 'center', 
-        color: '#FFFFFF', line: 7, position:''} ] 
+        color: '#FFFFFF'} ] 
     }
 
-let gCurrAlign = '.text-' + gMeme.lines[gCurrLine].align
+let gCurrAlign = '.text-' + gMeme.lines[gMeme.selectedLineIdx].align
 
-document.querySelector('.color-change').value = gMeme.lines[gCurrLine].color
-document.querySelector('.txt-change').placeholder = gMeme.lines[gCurrLine].txt
+document.querySelector('.color-change').value = gMeme.lines[gMeme.selectedLineIdx].color
+document.querySelector('.txt-change').placeholder = gMeme.lines[gMeme.selectedLineIdx].txt
 document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr-4)"
 
 function getMeme(){
@@ -32,55 +31,60 @@ function getMeme(){
 }
 
 function drawImg(){
-    gPositions = []
-    let txtLine = 0
+    let positions = []
+    let position
     let objWithIdIndex = gImgs.findIndex(ele => ele.id === gMeme.selectedImgId)
     const img = new Image()
+    gMeme.selectedLineIdx = 0
     img.src = gImgs[objWithIdIndex].url
     img.onload = () => {
         gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height)
         gMeme.lines.forEach(line => {
+            if(gMeme.selectedLineIdx === 0) position = 40
+            else if(gMeme.selectedLineIdx === 1) position = gElCanvas.height - 40
+            else if(gMeme.selectedLineIdx > 1) position = gElCanvas.height/2
             gCtx.font = line.size + 'px Arial'
             gCtx.fillStyle = line.color
             gCtx.textAlign = line.align;
             let xPosition = gCtx.measureText(line.txt)
-            if(line.line < txtLine) line.line = txtLine
             switch (line.align) {
                 case 'right':
-                    line.position = {x:xPosition.width,y:40+(line.line/8)*(gElCanvas.height)}
+                    position = {x:xPosition.width,y:position}
                     break;
             
                 case 'center': 
-                    line.position = {x:gElCanvas.width/2,y:40+(line.line/8)*(gElCanvas.height)}
+                    position = {x:gElCanvas.width/2,y:position}
                     break;
 
                 case 'left':
-                    line.position = {x:gElCanvas.width - xPosition.width,y:40+(line.line/8)*(gElCanvas.height)}
+                    position = {x:gElCanvas.width - xPosition.width,y:position}
                     break
             }
-            gPositions.push(line.position)
-            gCtx.fillText(line.txt,line.position.x,line.position.y) 
-            txtLine++
+            positions.push(position)
+            gCtx.fillText(line.txt,position.x,position.y) 
+            gMeme.selectedLineIdx++
         })
-        gCtx.strokeStyle = 'white'
-        gCtx.strokeRect(0, gPositions[gCurrLine].y, gElCanvas.width, -40)
+        if(gMeme.lines.length > 0){
+            gMeme.selectedLineIdx = gCurrLine
+            gCtx.strokeStyle = 'white'
+            gCtx.strokeRect(0, positions[gMeme.selectedLineIdx].y, gElCanvas.width, -40)
+        }
     }
-    return gPositions
 }
 
 function setLineTxt(){
-    gMeme.lines[gCurrLine].txt = document.querySelector('.txt-change').value
+    gMeme.lines[gMeme.selectedLineIdx].txt = document.querySelector('.txt-change').value
 }
 
 function setTxtColor(){
-    gMeme.lines[gCurrLine].color = document.querySelector('.color-change').value
+    gMeme.lines[gMeme.selectedLineIdx].color = document.querySelector('.color-change').value
 }
 
 function switchLines(){
     gCurrLine++
     if(gCurrLine >= gMeme.lines.length) gCurrLine = 0
+    gMeme.selectedLineIdx =gCurrLine
     changeLineUsed()
-    console.log(gPositions);
 }
 
 function _savMemesToStorage(key = STORAGE_KEY, val = gMemes){
@@ -88,35 +92,50 @@ function _savMemesToStorage(key = STORAGE_KEY, val = gMemes){
 }
 
 function fontSize(size){
-    size === 'plus'? gMeme.lines[gCurrLine].size +=1 : gMeme.lines[gCurrLine].size -=1
+    size === 'plus'? gMeme.lines[gMeme.selectedLineIdx].size +=1 : gMeme.lines[gMeme.selectedLineIdx].size -=1
 }
 
 function alignText(align){
-    gMeme.lines[gCurrLine].align = align
+    gMeme.lines[gMeme.selectedLineIdx].align = align
     changeLineUsed()
 }
 
 function addLine(){
-    gMeme.lines.unshift(
+    gMeme.lines.push(
         { 
         txt: 'New line', 
-        size: 20, align: 'center', 
-        color: '#FFFFFF', line: 0, position:''
+        size: 30, align: 'center', 
+        color: '#FFFFFF'
         }
     )
     console.log(gMeme.lines);
-    gCurrLine = 0
+    gCurrLine = gMeme.lines.length -1
     changeLineUsed()
 }
 
 function changeLineUsed(){
-    document.querySelector('.color-change').value = gMeme.lines[gCurrLine].color
-    document.querySelector('.txt-change').placeholder = gMeme.lines[gCurrLine].txt
-    document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr3)"
-    gCurrAlign = '.text-' + gMeme.lines[gCurrLine].align
-    document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr-4)"
+    if(gMeme.lines.length > 0){
+        document.querySelector('.color-change').value = gMeme.lines[gMeme.selectedLineIdx].color
+        document.querySelector('.txt-change').placeholder = gMeme.lines[gMeme.selectedLineIdx].txt
+        document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr3)"
+        gCurrAlign = '.text-' + gMeme.lines[gMeme.selectedLineIdx].align
+        document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr-4)"
+    }else{
+        document.querySelector('.color-change').value = "#FFFFFF"
+        document.querySelector('.txt-change').placeholder = 'No line found' 
+        document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr3)"
+    }
 
 }
+
+function deleteLine(){
+    gMeme.lines.splice(gCurrLine,1)
+    console.log(gMeme.lines);
+    gCurrLine = 0
+    gMeme.selectedLineIdx =gCurrLine
+    changeLineUsed()
+}
+
 
 
 

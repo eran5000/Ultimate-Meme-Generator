@@ -35,3 +35,8 @@ function onAddLine(){
     addLine()
     renderMeme()
 }
+
+function onDeleteLine(){
+    deleteLine()
+    renderMeme()
+}

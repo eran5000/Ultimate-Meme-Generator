@@ -34,13 +34,14 @@
                 <input class="txt-change" type="text" oninput="onChangeText()" placeholder="">
                 <label for="color-change">Change Text</label>
                 <input class="color-change" type="color" oninput="onChangeColor()">
-                <button type="button" class="switch-line" onclick="onSwitchLines()">&uarr;&darr;</button>
-                <button type="button" class="font-plus" onclick="onFontSize('plus')">A+</button>
-                <button type="button" class="font-minus" onclick="onFontSize('minus')">A-</button>
-                <button type="button" class="text-right" onclick="onAlignText('right')">right</button>
-                <button type="button" class="text-center" onclick="onAlignText('center')">center</button>
-                <button type="button" class="text-left" onclick="onAlignText('left')">left</button>
-                <button type="button" class="add-line" onclick="onAddLine()">+</button>
+                <button type="button" class="edit switch-line" onclick="onSwitchLines()">&uarr;&darr;</button>
+                <button type="button" class="edit font-plus" onclick="onFontSize('plus')">A+</button>
+                <button type="button" class="edit font-minus" onclick="onFontSize('minus')">A-</button>
+                <button type="button" class="edit text-right" onclick="onAlignText('right')">&#182;<br>&#8594;</button>
+                <button type="button" class="edit text-center" onclick="onAlignText('center')">&#182;<br>&#8596;</button>
+                <button type="button" class="edit text-left" onclick="onAlignText('left')"> &#182;<br>&#8592;</button>
+                <button type="button" class="edit add-line" onclick="onAddLine()">+</button>
+                <button type="button" class="edit delete-line" onclick="onDeleteLine()">&#128465;</button>
             </div>
         </section>
     

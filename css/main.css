@@ -206,6 +206,12 @@ body.editor-open .editor-container{
     display:none;
 }
 
+.edit{
+    width: fit-content;
+    height:fit-content;
+    border-radius: 5px;
+}
+
 @media (max-width:900px) {
     .main-nav {
         position: fixed;

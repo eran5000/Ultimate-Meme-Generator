@@ -3,14 +3,11 @@
 const STORAGE_KEY = 'memeDB'
 
 let gCurrLine = 0
-let isBorder = false
 let gFonts = []
 let gPositions = []
 let gMemes =[]
 let gElCanvas = document.getElementById('img-to-meme')
-let gCtx = gElCanvas.getContext('2d'),
-    columns = 5,
-    rows = 5
+let gCtx
 let gMeme ={ 
     selectedImgId: 1, 
     selectedLineIdx: 0, 
@@ -22,9 +19,10 @@ let gMeme ={
         size: 30, align: 'center', 
         color: '#FFFFFF'} ] 
     }
-
+    
 let gCurrAlign = '.text-' + gMeme.lines[gMeme.selectedLineIdx].align
-
+    
+let gBorderPosition = []
 document.querySelector('.txt-change').placeholder = gMeme.lines[gMeme.selectedLineIdx].txt
 document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr-4)"
 // resizeCanvas()
@@ -33,11 +31,16 @@ function getMeme(){
     return gMeme
 }
 
-function drawImg(){
-    let positions = []
+function getElCanvas(){
+    return gElCanvas
+}
+
+function drawImg(canvas = gElCanvas, isBorder = false,elLink='done',cb=console.log){
+    gBorderPosition = []
     let position
     let imgs = getImgs()
     let objWithIdIndex = imgs.findIndex(ele => ele.id === gMeme.selectedImgId)
+    gCtx = canvas.getContext('2d')
     const img = new Image()
     if(gFonts.length === 0){
         for(var i = 0; i < gMeme.lines.length; i++){
@@ -49,18 +52,18 @@ function drawImg(){
     gMeme.selectedLineIdx = 0
     img.src = gImgs[objWithIdIndex].url
     img.onload = () => {
-        gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height)
+        gCtx.drawImage(img, 0, 0, canvas.width, canvas.height)
         gMeme.lines.forEach(line => {
             if(gPositions.length != gMeme.lines.length){
                 if(gPositions.length === 0) gPositions.push(40)
-                else if(gPositions.length === 1) gPositions.push(gElCanvas.height)
-                else if(gPositions.length > 1) gPositions.push(gElCanvas.height/2)
+                else if(gPositions.length === 1) gPositions.push(canvas.height)
+                else if(gPositions.length > 1) gPositions.push(canvas.height/2)
             }
             if(gPositions[gMeme.selectedLineIdx] <= 40){
                 gPositions[gMeme.selectedLineIdx] = 40
             }
-            else if(gPositions[gMeme.selectedLineIdx] >= gElCanvas.height){
-                gPositions[gMeme.selectedLineIdx] = gElCanvas.height
+            else if(gPositions[gMeme.selectedLineIdx] >= canvas.height){
+                gPositions[gMeme.selectedLineIdx] = canvas.height
             }
             gCtx.font = line.size + 'px '+gFonts[gMeme.selectedLineIdx]
             gCtx.fillStyle = line.color
@@ -72,14 +75,14 @@ function drawImg(){
                     break;
             
                 case 'center': 
-                    position = {x:gElCanvas.width/2,y:gPositions[gMeme.selectedLineIdx],start:gElCanvas.width/2-xPosition.width/2,end:xPosition.width}
+                    position = {x:canvas.width/2,y:gPositions[gMeme.selectedLineIdx],start:canvas.width/2-xPosition.width/2,end:xPosition.width}
                     break;
 
                 case 'left':
-                    position = {x:gElCanvas.width - xPosition.width,y:gPositions[gMeme.selectedLineIdx],start:gElCanvas.width - xPosition.width,end:xPosition.width}
+                    position = {x:canvas.width - xPosition.width,y:gPositions[gMeme.selectedLineIdx],start:canvas.width - xPosition.width,end:xPosition.width}
                     break
             }
-            positions.push(position)
+            gBorderPosition.push(position)
             gCtx.strokeStyle= 'black'
             gCtx.lineWidth = 1;
             gCtx.fillText(line.txt,position.x,position.y)
@@ -87,13 +90,11 @@ function drawImg(){
 
             gMeme.selectedLineIdx++
         })
-        if(gMeme.lines.length > 0 && isBorder == false){
-            gMeme.selectedLineIdx = gCurrLine
-            gCtx.lineWidth = 5;
-            gCtx.strokeStyle = 'white'
-            gCtx.strokeRect(positions[gMeme.selectedLineIdx].start, (positions[gMeme.selectedLineIdx].y + 10), positions[gMeme.selectedLineIdx].end, (-gMeme.lines[gMeme.selectedLineIdx].size - 10))
-        }
-        changeLineUsed()
+        gMeme.selectedLineIdx = gCurrLine
+        if(!isBorder)drawBoard()
+        else cb(elLink)
+        console.log(isBorder);
+        if(!canvas === gElCanvas)changeLineUsed()
     }
 }
 
@@ -186,7 +187,29 @@ function resizeCanvas() {
     gElCanvas.width = elContainer.offsetWidth -10
     // Unless needed, better keep height fixed.
     // gElCanvas.height = elContainer.offsetHeight
-  }
+}
+
+function drawBoard(){
+    const gradient = gCtx.createLinearGradient(0, 0, gElCanvas.width, gElCanvas.height)
+    gradient.addColorStop('0', '#eee')
+    gradient.addColorStop('.5', '#999')
+    gradient.addColorStop('1', '#333')
+        
+    gCtx.lineWidth = 5
+    gCtx.strokeStyle = gradient
+    gCtx.strokeRect(gBorderPosition[gMeme.selectedLineIdx].start, 
+        (gBorderPosition[gMeme.selectedLineIdx].y + 10), 
+        gBorderPosition[gMeme.selectedLineIdx].end, 
+        (-gMeme.lines[gMeme.selectedLineIdx].size - 10))
+}
+
+function downloadCanvas(elLink) {
+    // Gets the canvas content and convert it to base64 data URL that can be save as an image
+    const data = elCanvas.toDataURL(/* DEFAULT: 'image/png'*/) // Method returns a data URL containing a representation of the image in the format specified by the type parameter.
+    console.log('data', data) // Decoded the image to base64 
+    elLink.href = data // Put it on the link
+    elLink.download = 'MyMeme' // Can change the name of the file
+}
 
 
 

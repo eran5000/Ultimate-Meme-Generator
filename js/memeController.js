@@ -3,7 +3,6 @@ renderMeme()
 
 function renderMeme(){
     drawImg()
-    const strHtml = ``
 }
 
 function onChangeText(){

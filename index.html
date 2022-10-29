@@ -17,6 +17,7 @@
             <nav class="main-nav">
                 <ul class="flex full clean-list">
                     <li><a class="toggle" onclick="toggleEditor()"></a></li>
+                    <li><a class="header-saved" onclick="toggleSaved()">Saved</a></li>
                     <li><a class="header-gallery" onclick="onInitAbout()">About</a></li>
                 </ul>
             </nav>
@@ -48,13 +49,13 @@
                     <button type="button" class="edit text-down" onclick="onMoveText(40)">&darr;</button>
                 </div>
                 
-                <div class="flex column paragraph-edit">
+                <div class="flex column paragraph-edit space-around">
                     <div class="flex row editor space-between">
                         <button type="button" class="edit font-plus" onclick="onFontSize('plus')">A+</button>
                         <button type="button" class="edit font-minus" onclick="onFontSize('minus')">A-</button>
-                        <button type="button" class="edit text-right" onclick="onAlignText('right')">&#182;<br>&#8594;</button>
+                        <button type="button" class="edit text-right" onclick="onAlignText('right')">&#62; &#182;</button>
                         <button type="button" class="edit text-center" onclick="onAlignText('center')">&#182;<br>&#8596;</button>
-                        <button type="button" class="edit text-left" onclick="onAlignText('left')"> &#182;<br>&#8592;</button>
+                        <button type="button" class="edit text-left" onclick="onAlignText('left')"> &#60; &#182;</button>
                     </div>
                     <div class="flex row editor space-between">
                         <select class="fonts" oninput="onChangeFont()">
@@ -73,15 +74,23 @@
                     <div class="add-emoji" onclick="onAddEmoji('&#128513;')">&#128513;</div>
                     <div class="add-emoji" onclick="onAddEmoji('&#128514;')">&#128514;</div>
                 </div>
+                <div class="flex row">
+                    <button type="button" class="btn-save" onclick="OnSaveMeme()">Save</button>
+                    <a href="#" onclick="onDownloadCanvas(this)" download="file-name">Download</a>
+                </div>
             </div>
         </section>
+
+        <section class="saved-container grid"></section>
     
     
     <script src="./js/services/storageService.js"></script>
     <script src="./js/services/utilServices.js"></script>
-    <script src="./js/services/memeService.js"></script>
     <script src="./js/services/galleryService.js"></script>
+    <script src="./js/services/memeService.js"></script>
+    <script src="./js/services/savedService.js"></script>
     <script src="./js/galleryController.js"></script>
     <script src="./js/memeController.js"></script>
+    <script src="./js/savedController.js"></script>
     </body>
 </html>

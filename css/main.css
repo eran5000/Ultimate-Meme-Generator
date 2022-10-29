@@ -589,4 +589,59 @@ body.saved-open .saved-container{
 
 }
 
+@media (min-width:2000px){
+
+    .main-nav{
+        margin-right: 20%;
+    }
+
+    li{
+        margin-left: 20%;
+        margin-right: 20%;
+    }
+
+    .editor-container{
+        margin-top: 5%;
+    }
+
+    .meme-canvas{
+        height: 800px;
+        width: 800px;
+    }
+
+    .editor{
+        width: 800px;
+        padding: 70px;
+    }
+
+    .edit{
+        width: 70px;
+        height: 70px;
+        font-size: 30px;
+    }
+
+    .paragraph-edit{
+        width: 750px;
+        height: 300px;
+    }
+
+    .gallery-container{
+        grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+        grid-auto-rows: 230px;
+        
+    }
+
+    .gallery-search{
+        margin: 100px;
+        padding: 75px;
+    }
+
+    .search-bar{
+        width: 95%;
+        height: 100px;
+        border-radius: 50px;
+        font-size: 30px;
+    }
+}
+
 

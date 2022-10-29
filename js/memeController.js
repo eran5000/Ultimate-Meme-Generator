@@ -55,3 +55,8 @@ function onAddEmoji(emoji){
     addEmoji(emoji)
     renderMeme()
 }
+
+function OnSaveMeme(){
+    saveMeme()
+    renderSaves()
+}

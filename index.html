@@ -76,21 +76,21 @@
                 </div>
                 <div class="flex row">
                     <button type="button" class="btn-save" onclick="OnSaveMeme()">Save</button>
-                    <a href="#" onclick="onDownloadCanvas(this)" download="file-name">Download</a>
+                    <button>
+                        <a download="MyMeme" onclick="onDownloadCanvas(this)">Download</a>
+                    </button>
                 </div>
             </div>
         </section>
 
-        <section class="saved-container grid"></section>
+        <section class="saved-container"></section>
     
     
     <script src="./js/services/storageService.js"></script>
     <script src="./js/services/utilServices.js"></script>
     <script src="./js/services/galleryService.js"></script>
     <script src="./js/services/memeService.js"></script>
-    <script src="./js/services/savedService.js"></script>
     <script src="./js/galleryController.js"></script>
     <script src="./js/memeController.js"></script>
-    <script src="./js/savedController.js"></script>
     </body>
 </html>

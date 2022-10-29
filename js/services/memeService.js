@@ -36,7 +36,7 @@ function getElCanvas(){
 }
 
 
-function drawImg(canvas = gElCanvas,meme =gMeme, isBorder = false,elLink='done'){
+function drawImg(canvas = gElCanvas,meme = gMeme, isBorder = false,elLink='done'){
     gBorderPosition = []
     let position
     let imgs = getImgs()
@@ -210,7 +210,7 @@ function drawBoard(){
 }
 
 function onDownloadCanvas(elLink){
-    drawImg(gElCanvas,true,elLink)
+    drawImg(gElCanvas,gMeme,true,elLink)
 }
 
 function downloadCanvas(elLink) {
@@ -231,6 +231,7 @@ function renderSaves(){
         id="meme${i}"
         height="500"
         width="500"
+        onclick="addEditor()"
         ></canvas>`
        document.querySelector('.saved-container').innerHTML += strHtml
        const canvas = document.getElementById(`meme${i}`)

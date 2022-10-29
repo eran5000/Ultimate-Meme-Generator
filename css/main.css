@@ -62,10 +62,6 @@ img{
     height: 100%;
 }
 
-.saved-meme{
-    cursor: pointer;
-}
-
 /* HELPERS */
 
 /* flex helpers */
@@ -163,6 +159,10 @@ body.editor-open .toggle::before{
 
 .search{
     background-color: #000;
+}
+
+.meme-saved{
+    cursor: pointer;
 }
 
 

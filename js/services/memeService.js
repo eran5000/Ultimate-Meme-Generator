@@ -3,28 +3,25 @@
 const STORAGE_KEY = 'memeDB'
 
 let gCurrLine = 0
-let gFonts = []
 let gPositions = []
 let gMemes =[]
 let gElCanvas = document.getElementById('img-to-meme')
-let gCtx
+let gCtx = gElCanvas.getContext('2d')
 let gMeme ={ 
     selectedImgId: 1, 
     selectedLineIdx: 0, 
     lines: 
     [ { txt: 'I sometimes eat Falafel', 
-        size: 40, align: 'right', 
-        color: '#FFFFFF'},
+        size: 30, font:'Impact',align:'center', 
+        color: '#FFFFFF',isDrag: false, pos:{x:gElCanvas.width/2,y:null}},
         { txt: 'I always eat Nuggets', 
-        size: 30, align: 'center', 
-        color: '#FFFFFF'} ] 
+        size: 20, font:'Impact',align:'center',
+        color: '#FFFFFF',isDrag: false, pos:{x:gElCanvas.width/2 + 20*2,y:null}} ] 
     }
     
-let gCurrAlign = '.text-' + gMeme.lines[gMeme.selectedLineIdx].align
+let gCurrAlign = '.text-center'
     
-let gBorderPosition = []
 document.querySelector('.txt-change').placeholder = gMeme.lines[gMeme.selectedLineIdx].txt
-document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr-4)"
 // resizeCanvas()
 
 function getMeme(){
@@ -36,58 +33,22 @@ function getElCanvas(){
 }
 
 
-function drawImg(isBorder = false){
-    gBorderPosition = []
-    let position
-    let imgs = getImgs()
-    let objWithIdIndex = imgs.findIndex(ele => ele.id === gMeme.selectedImgId)
-    gCtx = gElCanvas.getContext('2d')
-    const img = new Image()
-    if(gFonts.length === 0){
-        for(var i = 0; i < gMeme.lines.length; i++){
-            gFonts.push('Impact')
-        }
-    }else if(gFonts.length != gMeme.lines.length){
-        gFonts.push('Impact')
-    }
+function drawMeme(isBorder = false){
+    let img = makeImg()
     gMeme.selectedLineIdx = 0
-    img.src = imgs[objWithIdIndex].url
     img.onload = () => {
         gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height)
         gMeme.lines.forEach(line => {
-            if(gPositions.length != gMeme.lines.length){
-                if(gPositions.length === 0) gPositions.push(40)
-                else if(gPositions.length === 1) gPositions.push(gElCanvas.height)
-                else if(gPositions.length > 1) gPositions.push(gElCanvas.height/2)
-            }
-            if(gPositions[gMeme.selectedLineIdx] <= 40){
-                gPositions[gMeme.selectedLineIdx] = 40
-            }
-            else if(gPositions[gMeme.selectedLineIdx] >= gElCanvas.height){
-                gPositions[gMeme.selectedLineIdx] = gElCanvas.height
-            }
-            gCtx.font = line.size + 'px '+gFonts[gMeme.selectedLineIdx]
+            gCtx.font = line.size + 'px '+line.font
             gCtx.fillStyle = line.color
-            gCtx.textAlign = line.align;
-            let xPosition = gCtx.measureText(line.txt) 
-            switch (line.align) {
-                case 'right':
-                    position = {x:xPosition.width,y:gPositions[gMeme.selectedLineIdx],start:0,end:xPosition.width}
-                    break;
-            
-                case 'center': 
-                    position = {x:gElCanvas.width/2,y:gPositions[gMeme.selectedLineIdx],start:gElCanvas.width/2-xPosition.width/2,end:xPosition.width}
-                    break;
-
-                case 'left':
-                    position = {x:gElCanvas.width - xPosition.width,y:gPositions[gMeme.selectedLineIdx],start:gElCanvas.width - xPosition.width,end:xPosition.width}
-                    break
-            }
-            gBorderPosition.push(position)
+            line.width = gCtx.measureText(line.txt).width
+            line.height = gCtx.measureText(line.txt).fontBoundingBoxAscent
+            gCtx.textAlign = line.align
+            if(line.pos.y === null) line.pos.y = textPlaceOnCanvas()
             gCtx.strokeStyle= 'black'
             gCtx.lineWidth = 1;
-            gCtx.fillText(line.txt,position.x,position.y)
-            gCtx.strokeText(line.txt,position.x,position.y)
+            gCtx.fillText(line.txt,line.pos.x,line.pos.y)
+            gCtx.strokeText(line.txt,line.pos.x,line.pos.y)
 
             gMeme.selectedLineIdx++
         })
@@ -99,6 +60,14 @@ function drawImg(isBorder = false){
         }
     }
     
+}
+
+function makeImg(){
+    let imgs = getImgs()
+    let objWithIdIndex = imgs.findIndex(ele => ele.id === gMeme.selectedImgId)
+    const img = new Image()
+    img.src = imgs[objWithIdIndex].url
+    return img
 }
 
 
@@ -127,16 +96,33 @@ function fontSize(size){
 }
 
 function alignText(align){
-    gMeme.lines[gMeme.selectedLineIdx].align = align
+    switch (align) {
+        case 'right':
+            gMeme.lines[gMeme.selectedLineIdx].pos.x = gMeme.lines[gMeme.selectedLineIdx].width/2 
+            break;
+
+        case 'center':
+            gMeme.lines[gMeme.selectedLineIdx].pos.x = gElCanvas.width/2
+            break;
+        case 'left':
+            gMeme.lines[gMeme.selectedLineIdx].pos.x = gElCanvas.width - gMeme.lines[gMeme.selectedLineIdx].width/2
+             break;
+    }
+
+    document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr3)"
+    gCurrAlign = '.text-' + align
 }
 
 function addLine(){
     gMeme.lines.push(
         { 
-        txt: 'New line', 
-        size: 30, align: 'center', 
-        color: '#FFFFFF'
-        }
+        txt: 'new line', 
+        size: 20,  
+        color: '#FFFFFF',
+        align:'center',
+        font:'Impact',
+        isDrag: false, 
+        pos:{x:gElCanvas.width/2,y:null}},
     )
     gCurrLine = gMeme.lines.length -1
     gMeme.selectedLineIdx = gCurrLine
@@ -145,10 +131,8 @@ function addLine(){
 function changeLineUsed(){
     if(gMeme.lines.length > 0){
         document.querySelector('.txt-change').placeholder = gMeme.lines[gMeme.selectedLineIdx].txt
-        document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr3)"
-        gCurrAlign = '.text-' + gMeme.lines[gMeme.selectedLineIdx].align
+        document.querySelector('.fonts').value = gMeme.lines[gMeme.selectedLineIdx].font
         document.querySelector(gCurrAlign).style.backgroundColor = "var(--clr2)"
-        document.querySelector('.fonts').value = gFonts[gMeme.selectedLineIdx]
     }else{
         document.querySelector('.txt-change').value = ''
         document.querySelector('.txt-change').placeholder = 'No line found' 
@@ -160,34 +144,36 @@ function changeLineUsed(){
 
 function deleteLine(){
     gMeme.lines.splice(gCurrLine,1)
-    gFonts.splice(gCurrLine,1)
-    gPositions.splice(gCurrLine,1)
     gCurrLine = 0
     gMeme.selectedLineIdx =gCurrLine
 }
 
 function changeFont(font){
-    gFonts[gMeme.selectedLineIdx] = font
+    gMeme.lines[gMeme.selectedLineIdx].font = font
 }
 
 function moveText(diraction){
-    gPositions[gMeme.selectedLineIdx] += diraction
+    gMeme.lines[gMeme.selectedLineIdx].pos.y += diraction
+    // gPositions[gMeme.selectedLineIdx] += diraction
 }
 
 function addEmoji(emoji){
     gMeme.lines.push(
         { 
         txt: emoji, 
-        size: 30, align: 'center', 
-        color: '#FFFFFF'
-        }
+        size: 30, 
+        color: '#FFFFFF',
+        align:'center',
+        font:'Impact',
+        isDrag: false, 
+        pos:{x:gElCanvas.width/2,y:null}},
     )
     gCurrLine = gMeme.lines.length -1
     gMeme.selectedLineIdx = gCurrLine
 }
 
 function resizeCanvas() {
-    const elContainer = document.querySelector('.meme-canvas')
+    const elContainer = document.querySelector('.canvas-container')
     // Note: changing the canvas dimension this way clears the canvas
     gElCanvas.width = elContainer.offsetWidth -10
     // Unless needed, better keep height fixed.
@@ -195,6 +181,8 @@ function resizeCanvas() {
 }
 
 function drawBoard(){
+    const line = gMeme.lines[gMeme.selectedLineIdx]
+    let postionX
     const gradient = gCtx.createLinearGradient(0, 0, gElCanvas.width, gElCanvas.height)
     gradient.addColorStop('0', '#eee')
     gradient.addColorStop('.5', '#999')
@@ -202,15 +190,11 @@ function drawBoard(){
         
     gCtx.lineWidth = 5
     gCtx.strokeStyle = gradient
-    gCtx.strokeRect(gBorderPosition[gMeme.selectedLineIdx].start, 
-        (gBorderPosition[gMeme.selectedLineIdx].y + 10), 
-        gBorderPosition[gMeme.selectedLineIdx].end, 
-        (-gMeme.lines[gMeme.selectedLineIdx].size - 10))
+    gCtx.strokeRect(line.pos.x - line.width/2 , line.pos.y - line.size, line.width, line.height + 10)
 }
-let secondClick = false
 
 function onDownloadCanvas(){
-    drawImg(true)
+    drawMeme(true)
     setTimeout(function(){
         document.querySelector('.a-download').click()
     },1000)
@@ -224,25 +208,100 @@ function downloadCanvas(elLink) {
 }
 
 function OnSaveMeme(){
-    drawImg(true)
+    drawMeme(true)
     setTimeout(function(){
         document.querySelector('.btn-save').click()
     },2000)
 }
 
 function saveMeme(){
-    gMemes.push(gElCanvas.toDataURL("image/png"))
-    renderSaves()
+    let img = gElCanvas.toDataURL("image/png")
+    console.log(img);
+    gMeme.imgSrc = img
+    gMeme.saved = gMemes.length
+    gMemes.push(structuredClone(gMeme))
+    console.log(gMemes);
     console.log('done');
+}
+
+function textMoveOnCanvas(){
+
+    if(gMeme.lines[gMeme.selectedLineIdx].pos.x  < 0){
+        gMeme.lines[gMeme.selectedLineIdx].pos.x =gMeme.lines[gMeme.selectedLineIdx].width/2
+    }    
+    else if(gMeme.lines[gMeme.selectedLineIdx].pos.x >= gElCanvas.width){
+        gMeme.lines[gMeme.selectedLineIdx].pos.x =gElCanvas.width
+    }
+
+    if(gMeme.lines[gMeme.selectedLineIdx].pos.y - gMeme.lines[gMeme.selectedLineIdx].height < 0){
+        gMeme.lines[gMeme.selectedLineIdx].pos.y = gMeme.lines[gMeme.selectedLineIdx].height
+    }else if(gMeme.lines[gMeme.selectedLineIdx].pos.y + gMeme.lines[gMeme.selectedLineIdx].height > gElCanvas.height + 50){
+        gMeme.lines[gMeme.selectedLineIdx].pos.y = gElCanvas.height - gMeme.lines[gMeme.selectedLineIdx].height/2
+    }
+}
+
+function textPlaceOnCanvas(){
+    if(gMeme.selectedLineIdx === 0){ 
+        return gMeme.lines[gMeme.selectedLineIdx].size
+    }
+    else if(gMeme.selectedLineIdx === 1){
+        return gElCanvas.height - gMeme.lines[gMeme.selectedLineIdx].size
+    } 
+    else if(gMeme.selectedLineIdx > 1) {
+        return gElCanvas.height/2
+    }
 }
 
 function renderSaves(){
     document.querySelector('.saved-container').innerHTML = ''
     const strHtml = gMemes.map(meme =>{
         return `<img class="meme-saved meme"
-            src="${meme}"
-            onclick="addEditor()"`
+            src="${meme.imgSrc}"
+            onclick="memeEditor(${gMeme.saved})">`
     }).join('')
-    document.querySelector('.saved-container').innerHTML += strHtml 
+    document.querySelector('.saved-container').innerHTML = strHtml 
+}
+
+function memeEditor(save){
+    gMeme = gMemes[save]
+    addEditor()
+    drawMeme()
+}
+
+//Check if the click is inside the circle 
+function isCircleClicked(clickedPos) {
+    let line = gMeme.lines[gMeme.selectedLineIdx]
+    const { pos } = line
+    const lineWidth = gCtx.measureText(line.txt).width
+    const lineHeight = gCtx.measureText(line.txt).fontBoundingBoxAscent + 10
+    console.log('pos.y', pos.y,'pos.y - lineHeight',pos.y - lineHeight,'clickedPos.y',clickedPos.y);
+    console.log('pos.start',pos.start,'pos.start + lineWidth',pos.start + lineWidth,'clickedPos.x',clickedPos.x);
+    // Calc the distance between two dots
+    const distance = (clickedPos.x < pos.x + lineWidth/1.5 &&
+        clickedPos.x > pos.x/5 &&
+        clickedPos.y < pos.y &&
+        clickedPos.y > pos.y - lineHeight)
+    console.log(distance);
+    //If its smaller then the radius of the circle we are inside
+    return distance 
+}
+
+function setCircleDrag(isDrag) {
+    gMeme.lines[gMeme.selectedLineIdx].isDrag = isDrag
+}
+
+function moveCircle(dx, dy) {
+    console.log('dx',dx,'dy',dy);
+    gMeme.lines[gMeme.selectedLineIdx].pos.x += dx/6
+    gMeme.lines[gMeme.selectedLineIdx].pos.y += dy/6
+    textMoveOnCanvas()
+    console.log('x',gMeme.lines[gMeme.selectedLineIdx].pos.x += dx,'y',gMeme.lines[gMeme.selectedLineIdx].pos.y += dy);
+  
+}
+
+function resizeCanvas() {
+    const elContainer = document.querySelector('.canvas-container')
+    gElCanvas.width = elContainer.offsetWidth
+    gElCanvas.height = elContainer.offsetHeight
 }
 

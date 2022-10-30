@@ -16,4 +16,5 @@ function addEditor(){
 
 function toggleSaved(){
     document.body.classList.add('saved-open');
+    renderSaves()
 }

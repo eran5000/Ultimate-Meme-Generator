@@ -34,11 +34,12 @@
             <div class="gallery-container grid"></div>
         </section>
         <section class="editor-container flex space-around">
-            <canvas class="meme-canvas"
-                id="img-to-meme"
-                height="500"
-                width="500"
-            ></canvas>
+            <div class="canvas-container">
+                <canvas class="meme-canvas"
+                    id="img-to-meme"
+                ></canvas>
+            </div>
+            </div>
             <div class="meme-editor flex column align-center space-around">
                 <input class="txt-change" type="text" oninput="onChangeText()">
                 <div class="flex row space-between editor">
@@ -84,7 +85,7 @@
             </div>
         </section>
 
-        <section class="saved-container"></section>
+        <section class="saved-container grid"></section>
     
     
     <script src="./js/services/storageService.js"></script>

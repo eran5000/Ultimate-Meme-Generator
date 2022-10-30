@@ -16,8 +16,8 @@ function renderGallery(){
 
 function onImgSelect(id){
     setImg(id)
-    renderMeme()
     toggleEditor()
+    renderMeme()
 }
 
 function onSetFilterByTxt(txt) {

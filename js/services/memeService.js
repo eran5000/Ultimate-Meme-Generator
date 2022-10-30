@@ -36,51 +36,51 @@ function getElCanvas(){
 }
 
 
-function drawImg(canvas = gElCanvas,meme = gMeme, isBorder = false,elLink='done'){
+function drawImg(isBorder = false){
     gBorderPosition = []
     let position
     let imgs = getImgs()
-    let objWithIdIndex = imgs.findIndex(ele => ele.id === meme.selectedImgId)
-    gCtx = canvas.getContext('2d')
+    let objWithIdIndex = imgs.findIndex(ele => ele.id === gMeme.selectedImgId)
+    gCtx = gElCanvas.getContext('2d')
     const img = new Image()
     if(gFonts.length === 0){
-        for(var i = 0; i < meme.lines.length; i++){
+        for(var i = 0; i < gMeme.lines.length; i++){
             gFonts.push('Impact')
         }
-    }else if(gFonts.length != meme.lines.length){
+    }else if(gFonts.length != gMeme.lines.length){
         gFonts.push('Impact')
     }
-    meme.selectedLineIdx = 0
+    gMeme.selectedLineIdx = 0
     img.src = imgs[objWithIdIndex].url
     img.onload = () => {
-        gCtx.drawImage(img, 0, 0, canvas.width, canvas.height)
-        meme.lines.forEach(line => {
-            if(gPositions.length != meme.lines.length){
+        gCtx.drawImage(img, 0, 0, gElCanvas.width, gElCanvas.height)
+        gMeme.lines.forEach(line => {
+            if(gPositions.length != gMeme.lines.length){
                 if(gPositions.length === 0) gPositions.push(40)
-                else if(gPositions.length === 1) gPositions.push(canvas.height)
-                else if(gPositions.length > 1) gPositions.push(canvas.height/2)
+                else if(gPositions.length === 1) gPositions.push(gElCanvas.height)
+                else if(gPositions.length > 1) gPositions.push(gElCanvas.height/2)
             }
-            if(gPositions[meme.selectedLineIdx] <= 40){
-                gPositions[meme.selectedLineIdx] = 40
+            if(gPositions[gMeme.selectedLineIdx] <= 40){
+                gPositions[gMeme.selectedLineIdx] = 40
             }
-            else if(gPositions[meme.selectedLineIdx] >= canvas.height){
-                gPositions[meme.selectedLineIdx] = canvas.height
+            else if(gPositions[gMeme.selectedLineIdx] >= gElCanvas.height){
+                gPositions[gMeme.selectedLineIdx] = gElCanvas.height
             }
-            gCtx.font = line.size + 'px '+gFonts[meme.selectedLineIdx]
+            gCtx.font = line.size + 'px '+gFonts[gMeme.selectedLineIdx]
             gCtx.fillStyle = line.color
             gCtx.textAlign = line.align;
             let xPosition = gCtx.measureText(line.txt) 
             switch (line.align) {
                 case 'right':
-                    position = {x:xPosition.width,y:gPositions[meme.selectedLineIdx],start:0,end:xPosition.width}
+                    position = {x:xPosition.width,y:gPositions[gMeme.selectedLineIdx],start:0,end:xPosition.width}
                     break;
             
                 case 'center': 
-                    position = {x:canvas.width/2,y:gPositions[meme.selectedLineIdx],start:canvas.width/2-xPosition.width/2,end:xPosition.width}
+                    position = {x:gElCanvas.width/2,y:gPositions[gMeme.selectedLineIdx],start:gElCanvas.width/2-xPosition.width/2,end:xPosition.width}
                     break;
 
                 case 'left':
-                    position = {x:canvas.width - xPosition.width,y:gPositions[meme.selectedLineIdx],start:canvas.width - xPosition.width,end:xPosition.width}
+                    position = {x:gElCanvas.width - xPosition.width,y:gPositions[gMeme.selectedLineIdx],start:gElCanvas.width - xPosition.width,end:xPosition.width}
                     break
             }
             gBorderPosition.push(position)
@@ -89,15 +89,14 @@ function drawImg(canvas = gElCanvas,meme = gMeme, isBorder = false,elLink='done'
             gCtx.fillText(line.txt,position.x,position.y)
             gCtx.strokeText(line.txt,position.x,position.y)
 
-            meme.selectedLineIdx++
+            gMeme.selectedLineIdx++
         })
-        meme.selectedLineIdx = gCurrLine
-        if(!isBorder)drawBoard()
-        else if(elLink != 'done'){
-            downloadCanvas(elLink)
-            drawBoard()
+        gMeme.selectedLineIdx = gCurrLine
+        if(gMeme.lines.length > 0){
+            if(!isBorder)drawBoard()
+            else setTimeout(drawBoard,2000)
+            changeLineUsed()
         }
-        changeLineUsed()
     }
     
 }
@@ -208,9 +207,14 @@ function drawBoard(){
         gBorderPosition[gMeme.selectedLineIdx].end, 
         (-gMeme.lines[gMeme.selectedLineIdx].size - 10))
 }
+let secondClick = false
 
-function onDownloadCanvas(elLink){
-    drawImg(gElCanvas,gMeme,true,elLink)
+function onDownloadCanvas(){
+    drawImg(true)
+    setTimeout(function(){
+        document.querySelector('.a-download').click()
+    },1000)
+
 }
 
 function downloadCanvas(elLink) {
@@ -219,22 +223,26 @@ function downloadCanvas(elLink) {
     elLink.href = data // Put it on the link
 }
 
+function OnSaveMeme(){
+    drawImg(true)
+    setTimeout(function(){
+        document.querySelector('.btn-save').click()
+    },2000)
+}
+
 function saveMeme(){
-    gMemes.push(gMeme)
+    gMemes.push(gElCanvas.toDataURL("image/png"))
+    renderSaves()
+    console.log('done');
 }
 
 function renderSaves(){
     document.querySelector('.saved-container').innerHTML = ''
-    gMemes.forEach(meme =>{
-        const strHtml =`<canvas class="meme-saved" 
-        id="meme${i}"
-        height="500"
-        width="500"
-        onclick="addEditor()"
-        ></canvas>`
-       document.querySelector('.saved-container').innerHTML += strHtml
-       const canvas = document.getElementById(`meme${i}`)
-       drawImg(canvas,meme,true) 
-    })
+    const strHtml = gMemes.map(meme =>{
+        return `<img class="meme-saved meme"
+            src="${meme}"
+            onclick="addEditor()"`
+    }).join('')
+    document.querySelector('.saved-container').innerHTML += strHtml 
 }
 

@@ -103,8 +103,9 @@ img{
 /* LAYOUT */
 
 header{
-    background-color: var(--clr-4);
-    background-image: linear-gradient(90deg,rgb(15, 170, 191),60%,rgb(16, 148, 73),60%);
+    /* background-color: var(--clr-4); */
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,91,1) 50%, rgba(0,212,255,1) 100%);
     font-size: large;
 }
 
@@ -372,7 +373,8 @@ body.saved-open .saved-container{
 @media (max-width:1000px) {
     .main-nav {
         position: fixed;
-        background-color: var(--clr-4);
+        background: rgb(2,0,36);
+        background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,91,1) 20%, rgba(0,212,255,1) 100%);
         height: 100vh;
         border-inline-start: 1px solid #ccc;
         inset: 95px 0 0 auto;

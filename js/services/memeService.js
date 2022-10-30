@@ -224,7 +224,6 @@ function saveMeme(){
 }
 
 function renderSaves(){
-    var i = 0
     document.querySelector('.saved-container').innerHTML = ''
     gMemes.forEach(meme =>{
         const strHtml =`<canvas class="meme-saved" 

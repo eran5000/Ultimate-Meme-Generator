@@ -152,10 +152,10 @@ function changeFont(font){
     gMeme.lines[gMeme.selectedLineIdx].font = font
 }
 
-function moveLine(diraction){
+/* function moveLine(diraction){
     gMeme.lines[gMeme.selectedLineIdx].pos.y += diraction
     // gPositions[gMeme.selectedLineIdx] += diraction
-}
+} */
 
 function addEmoji(emoji){
     gMeme.lines.push(
@@ -184,9 +184,9 @@ function drawBoard(){
     const line = gMeme.lines[gMeme.selectedLineIdx]
     let postionX
     const gradient = gCtx.createLinearGradient(0, 0, gElCanvas.width, gElCanvas.height)
-    gradient.addColorStop('0', '#eee')
-    gradient.addColorStop('.5', '#999')
-    gradient.addColorStop('1', '#333')
+    gradient.addColorStop('0', '#00FFFF')
+    gradient.addColorStop('.5', '#7FFFD4')
+    gradient.addColorStop('1', '#76EEC6')
         
     gCtx.lineWidth = 5
     gCtx.strokeStyle = gradient

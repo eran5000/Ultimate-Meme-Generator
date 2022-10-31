@@ -44,12 +44,11 @@
             </div>
             <div class="meme-editor flex column align-center space-around">
                 <input class="txt-change" type="text" oninput="onChangeText()">
-                <div class="flex row space-between editor">
+                <div class="flex row space-around editor">
                     <button type="button" class="edit switch-line" style="background-color:#00c7c7;color: rgb(255, 255, 255);" onclick="onSwitchLines()">&uarr;&darr;</button>
                     <button type="button" class="edit add-line" style="background-color:rgb(115, 185, 11);color: rgb(255, 255, 255);" onclick="onAddLine()">+</button>
                     <button type="button" class="edit delete-line" style="background-color:rgb(229, 61, 32);color: rgb(255, 255, 255);" onclick="onDeleteLine()">&#128465;</button>
-                    <button type="button" class="edit text-up" onclick="onMoveText(-40)">&uarr;</button>
-                    <button type="button" class="edit text-down" onclick="onMoveText(40)">&darr;</button>
+                    
                 </div>
                 
                 <div class="flex column paragraph-edit space-around">

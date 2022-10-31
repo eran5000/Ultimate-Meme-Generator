@@ -132,10 +132,10 @@ function onChangeFont(){
     drawMeme()
 }
 
-function onMoveText(diraction){
+/* function onMoveText(diraction){
     moveText(diraction)
     drawMeme()
-}
+} */
 
 function onAddEmoji(emoji){
     addEmoji(emoji)

@@ -91,6 +91,7 @@ function setFilterByTxt(txt){
     gFilterBy = txt
     if(keywords.indexOf(txt.toLowerCase()) != -1){
         sizes[keywords.indexOf(txt)] += 0.1
+        document.querySelector('.search-bar').placeholder = txt
         console.log(sizes[keywords.indexOf(txt)]);
     }
     renderSearchWorcds()
@@ -99,7 +100,7 @@ function setFilterByTxt(txt){
 function renderSearchWorcds(){
     let strHtml = ''  
     for(var i = 0; i<sizes.length;i++){
-        strHtml += `<div class="word ${keywords[i]}" style="font-size:${sizes[i]*10}px;">${keywords[i]}-</div>`
+        strHtml += `<div class="word ${keywords[i]}" style="font-size:${sizes[i]*10}px;" onclick="onSetFilterByTxt('${keywords[i]}')">${keywords[i]}-</div>`
     }
     document.querySelector('.search-words').innerHTML=strHtml
 }

@@ -80,9 +80,9 @@ function setTxtColor(){
     gMeme.lines[gMeme.selectedLineIdx].color = document.querySelector('.colors').value
 }
 
-function switchLines(){
+function switchLines(num = gCurrLine + 1){
     document.querySelector('.txt-change').value = ''
-    gCurrLine++
+    gCurrLine = num
     if(gCurrLine >= gMeme.lines.length) gCurrLine = 0
     gMeme.selectedLineIdx =gCurrLine
 }
@@ -152,7 +152,7 @@ function changeFont(font){
     gMeme.lines[gMeme.selectedLineIdx].font = font
 }
 
-function moveText(diraction){
+function moveLine(diraction){
     gMeme.lines[gMeme.selectedLineIdx].pos.y += diraction
     // gPositions[gMeme.selectedLineIdx] += diraction
 }
@@ -269,7 +269,7 @@ function memeEditor(save){
 }
 
 //Check if the click is inside the circle 
-function isCircleClicked(clickedPos) {
+function isLineClicked(clickedPos) {
     let line = gMeme.lines[gMeme.selectedLineIdx]
     const { pos } = line
     const lineWidth = gCtx.measureText(line.txt).width
@@ -277,20 +277,40 @@ function isCircleClicked(clickedPos) {
     console.log('pos.y', pos.y,'pos.y - lineHeight',pos.y - lineHeight,'clickedPos.y',clickedPos.y);
     console.log('pos.start',pos.start,'pos.start + lineWidth',pos.start + lineWidth,'clickedPos.x',clickedPos.x);
     // Calc the distance between two dots
-    const distance = (clickedPos.x < pos.x + lineWidth/1.5 &&
+    let distance = (clickedPos.x < pos.x + lineWidth/1.5 &&
         clickedPos.x > pos.x/5 &&
         clickedPos.y < pos.y &&
         clickedPos.y > pos.y - lineHeight)
+    if(!distance) distance = isOtherLineClicked(clickedPos)
     console.log(distance);
     //If its smaller then the radius of the circle we are inside
     return distance 
 }
 
-function setCircleDrag(isDrag) {
+function isOtherLineClicked(clickedPos){
+    var lineNum = 0
+    gMeme.lines.forEach(line =>{
+        const lineWidth = gCtx.measureText(line.txt).width
+        const lineHeight = gCtx.measureText(line.txt).fontBoundingBoxAscent + 10
+        const{pos} = line
+        if(clickedPos.x < pos.x + lineWidth/1.5 &&
+        clickedPos.x > pos.x/5 &&
+        clickedPos.y < pos.y &&
+        clickedPos.y > pos.y - lineHeight) {
+            switchLines(lineNum)
+            drawMeme()
+            return true
+        }
+        else lineNum++
+    })
+    return false
+}
+
+function setLineDrag(isDrag) {
     gMeme.lines[gMeme.selectedLineIdx].isDrag = isDrag
 }
 
-function moveCircle(dx, dy) {
+function moveLine(dx, dy) {
     console.log('dx',dx,'dy',dy);
     gMeme.lines[gMeme.selectedLineIdx].pos.x += dx/6
     gMeme.lines[gMeme.selectedLineIdx].pos.y += dy/6

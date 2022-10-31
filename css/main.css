@@ -52,9 +52,12 @@ input{
     background-color: var(--clr-2);
 }
 
-button{
+button:not(.edit){
+    background: rgb(2,0,36);
+    background: linear-gradient(90deg, rgba(9,121,91,1) 50%, rgba(0,212,255,1) 100%);
     cursor: pointer;
     background-color: var(--clr3);
+    border-radius: 50px;
 }
 
 img{
@@ -105,7 +108,7 @@ img{
 header{
     /* background-color: var(--clr-4); */
     background: rgb(2,0,36);
-    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,91,1) 50%, rgba(0,212,255,1) 100%);
+    background: linear-gradient(90deg, rgba(9,121,91,1) 50%, rgba(0,212,255,1) 100%);
     font-size: large;
 }
 
@@ -160,6 +163,7 @@ body.editor-open .toggle::before{
 
 .search{
     background-color: #000;
+    width: 30%;
 }
 
 .meme-saved{
@@ -212,6 +216,7 @@ header a:hover{
     border-radius: 50px;
     cursor: pointer;
     text-align: center;
+    
 }
 
 .search-bar{
@@ -220,17 +225,25 @@ header a:hover{
 }
 
 .search-words{
-    width: 20%;
+    width: 80%;
     height: 20px;
-    margin-left: 5%;
+    margin-left: 10%;
     overflow: hidden;
     justify-content: center;
     align-items: center;
     
 }
 
+.word{
+    cursor: pointer;
+}
+
 .btn-search::before{
     content: 'more';
+}
+
+.gallery-search.open .btn-search::before{
+    content:'less';
 }
 
 .gallery-search.open .switch{
@@ -238,10 +251,14 @@ header a:hover{
 }
 
 .gallery-search.open .search-words{
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    grid-template-rows: repeat(auto-fill, minmax(40px, 1fr));
     width: 100%;
-    height: 50px;
+    height: 100px;
     margin-left: 0;
     justify-content: flex-start;
+    overflow-y: scroll;
 }
 
 .gallery-container, .saved-container{
@@ -374,7 +391,7 @@ body.saved-open .saved-container{
     .main-nav {
         position: fixed;
         background: rgb(2,0,36);
-        background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,121,91,1) 20%, rgba(0,212,255,1) 100%);
+        background: linear-gradient(90deg, rgba(9,121,91,1) 20%, rgba(0,212,255,1) 100%);
         height: 100vh;
         border-inline-start: 1px solid #ccc;
         inset: 95px 0 0 auto;
@@ -419,6 +436,12 @@ body.saved-open .saved-container{
     .gallery-container{
         grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
         grid-auto-rows: 175px;
+    }
+    .switch{
+        flex-direction: column;
+    }
+    .search{
+        width: 100%;
     }
 
     .gallery-search{

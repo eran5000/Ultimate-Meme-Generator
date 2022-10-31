@@ -91,7 +91,7 @@ function setFilterByTxt(txt){
     gFilterBy = txt
     if(keywords.indexOf(txt.toLowerCase()) != -1){
         sizes[keywords.indexOf(txt)] += 0.1
-        document.querySelector('.search-bar').placeholder = txt
+        document.querySelector('.search-bar').value = txt
         console.log(sizes[keywords.indexOf(txt)]);
     }
     renderSearchWorcds()
